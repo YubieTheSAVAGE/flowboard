@@ -1,6 +1,6 @@
 import 'server-only';
 import { cookies } from 'next/headers';
-import { decrypt } from './session';
+import { decrypt } from '../session';
 import { cache } from 'react';
 import { redirect } from 'next/navigation';
 import { PrismaClient } from '@/generated/prisma/client';
@@ -12,6 +12,7 @@ const adapter = new PrismaPg({
 })
 
 const prisma = new PrismaClient({ adapter });
+
 export const verifySession = cache(async () => {
     const cookie = (await cookies()).get('session')?.value;
     const session = await decrypt(cookie);
@@ -43,4 +44,4 @@ export const getUser = cache(async () => {
       console.log('Failed to fetch user')
       return null
     }
-  })
+})
