@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { signout } from "@/lib/auth";
-import { getUser } from "@/lib/dal";
+import { getUser } from "@/lib/dal/dal";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 

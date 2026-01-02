@@ -22,8 +22,6 @@ export function NavMain({
   }[]
 }) {
   const pathname = usePathname();
-  console.log(pathname);
-  console.log(items[0].url.slice(0, -1));
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Menu</SidebarGroupLabel>

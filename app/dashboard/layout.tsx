@@ -1,5 +1,5 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { getUser } from "@/lib/dal";
+import { getUser } from "@/lib/dal/dal";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Breadcrumb, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbLink, BreadcrumbItem } from "@/components/ui/breadcrumb";

@@ -1,38 +1,63 @@
 "use server"
 import { createProject as createProjectDal, getProjects as getProjectsDal } from "@/lib/dal/project";
 import { verifySession } from "../dal/dal";
+import { CreateProjectFormState } from "@/lib/definitions";
 
-export async function createProject(formData: FormData) {
+export async function createProject(
+    prevState: CreateProjectFormState | undefined,
+    formData: FormData
+){
     const session = await verifySession();
     if (!session?.userId) {
-        throw new Error("Unauthorized");
+        return {
+            errors: {
+                name: ["Unauthorized"],
+            },
+        };
     }
     const name = formData.get("name") as string;
     const description = formData.get("description") as string;
 
-    if (!name || !description) {
-        throw new Error("Name and description are required");
+    const errors: { name?: string[]; description?: string[] } = {};
+    if (!name) {
+        errors.name = ["Name is required"];
+    }
+    if (!description) {
+        errors.description = ["Description is required"];
+    }
+    if (Object.keys(errors).length > 0) {
+        return { errors };
     }
     
     const project = await createProjectDal(name, description, session.userId as string);
     if (!project) {
         return {
-            error: "Failed to create project",
+            errors: {
+                name: ["Failed to create project"],
+            },
         };
     }
     return {
-        success: "Project created successfully",
+        message: "Project created successfully",
     };
 }
 
 export async function getProjects() {
     const session = await verifySession();
     if (!session?.userId) {
-        throw new Error("Unauthorized");
+        return {
+            errors: {
+                projects: ["Unauthorized"],
+            },
+        };
     }
     const projects = await getProjectsDal();
     if (!projects) {
-        throw new Error("Failed to get projects");
+        return {
+            errors: {
+                projects: ["Failed to get projects"],
+            },
+        };
     }
     return {
         projects,

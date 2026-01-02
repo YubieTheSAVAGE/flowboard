@@ -1,5 +1,5 @@
 import 'server-only';
-import { PrismaClient } from "@/generated/prisma/client";
+import { PrismaClient, TaskStatus } from "@/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import 'dotenv/config'
 
@@ -29,4 +29,12 @@ export const getTasks = async () => {
         }
     });
     return tasks;
+}
+
+export const updateTask = async (id: string, data: { name?: string, description?: string, status?: TaskStatus }) => {
+    const task = await prisma.task.update({
+        where: { id },
+        data,
+    });
+    return task;
 }

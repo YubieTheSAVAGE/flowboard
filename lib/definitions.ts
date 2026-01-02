@@ -35,3 +35,12 @@ export type SigninFormState =
     errors?: string[];
     message?: string;
 }
+
+export type CreateProjectFormState = 
+{
+    errors?: {
+        name?: string[];
+        description?: string[];
+    };
+    message?: string;
+}
