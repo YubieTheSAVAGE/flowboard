@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { inter } from "@/app/ui/fonts";
+import { inter } from "@/components/ui/fonts";
 
 export const metadata: Metadata = {
-  title: "Flowboard",
+  title: {
+    template: "%s | Flowboard",
+    default: "Flowboard",
+  },
   description: "Flowboard is a platform for creating and managing your flowcharts.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
