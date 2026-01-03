@@ -2,6 +2,7 @@ import 'server-only';
 import { PrismaClient, TaskStatus } from "@/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import 'dotenv/config'
+import { cache } from 'react';
 
 const adapter = new PrismaPg({
     connectionString: process.env.DATABASE_URL,
@@ -30,6 +31,11 @@ export const getTasks = async () => {
     });
     return tasks;
 }
+
+export const getTasksCache = cache(async () => {
+    const tasks = await getTasks();
+    return tasks;
+})
 
 export const updateTask = async (id: string, data: { name?: string, description?: string, status?: TaskStatus }) => {
     const task = await prisma.task.update({

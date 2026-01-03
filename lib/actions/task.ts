@@ -1,8 +1,13 @@
+"use server"
 import { createTask as createTaskDal, getTasks as getTasksDal, updateTask as updateTaskDal } from "@/lib/dal/task";
 import { verifySession } from "../dal/dal";
 import { TaskStatus } from "@/generated/prisma/client";
-
-export async function createTask(formData: FormData) {
+import { CreateTaskFormState } from "../definitions";
+import { getTasksCache as getTasksCacheDal } from "@/lib/dal/task";
+export async function createTask(
+    prevState: CreateTaskFormState | undefined,
+    formData: FormData
+) {
     const session = await verifySession();
     if (!session?.userId) {
         throw new Error("Unauthorized");
@@ -28,7 +33,7 @@ export async function createTask(formData: FormData) {
         };
     }
     return {
-        success: "Task created successfully",
+        message: "Task created successfully",
     };
 }
 
@@ -45,6 +50,11 @@ export async function getTasks() {
         tasks,
     };
 }
+
+export async function getTasksCache() {
+    const tasks = await getTasksCacheDal();
+    return tasks;
+}   
 
 export async function updateTask(formData: FormData) {
     const session = await verifySession();

@@ -2,6 +2,7 @@ import 'server-only';
 import { PrismaClient } from "@/generated/prisma/client"
 import { PrismaPg } from "@prisma/adapter-pg";
 import 'dotenv/config'
+import { cache } from 'react';
 
 const adapter = new PrismaPg({
     connectionString: process.env.DATABASE_URL,
@@ -29,3 +30,8 @@ export const getProjects = async () => {
     })
     return projects;
 } 
+
+export const getProjectsCache = cache(async () => {
+    const projects = await getProjects();
+    return projects;
+})

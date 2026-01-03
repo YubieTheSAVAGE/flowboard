@@ -1,7 +1,8 @@
 "use server"
-import { createProject as createProjectDal, getProjects as getProjectsDal } from "@/lib/dal/project";
+import { createProject as createProjectDal, getProjects as getProjectsDal, getProjectsCache as getProjectsCacheDal } from "@/lib/dal/project";
 import { verifySession } from "../dal/dal";
 import { CreateProjectFormState } from "@/lib/definitions";
+import { cache } from "react";
 
 export async function createProject(
     prevState: CreateProjectFormState | undefined,
@@ -60,6 +61,16 @@ export async function getProjects() {
         };
     }
     return {
+        projects,
+    };
+}
+
+export async function getProjectsCache() {
+    const projects = await getProjectsCacheDal();
+    if (!projects) {
+        throw new Error("Failed to get projects cache");
+    }
+    return {    
         projects,
     };
 }

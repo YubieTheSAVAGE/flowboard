@@ -44,3 +44,13 @@ export type CreateProjectFormState =
     };
     message?: string;
 }
+
+export type CreateTaskFormState = 
+{
+    errors?: {
+        name?: string[];
+        description?: string[];
+        projectId?: string[];
+    };
+    message?: string;
+}
