@@ -2,6 +2,7 @@ import { Card } from "./card";
 import { Suspense } from "react";
 import { Skeleton } from "./skeleton";
 import { getTasks } from "@/lib/actions/task";
+import { getStatusLabel } from "@/lib/utils";
 
 async function TasksList() {
     const result = await getTasks();
@@ -14,10 +15,14 @@ async function TasksList() {
                         <h3 className="text-lg font-bold">{task.name}</h3>
                         <p className="text-sm text-gray-500">{task.project.name}</p>
                     </div>
+                    {!task.description.length ?
+                    <p className="text-sm text-gray-500 italic">No description</p>
+                    :
                     <p className="text-sm text-gray-500">{task.description}</p>
+                    }
                     <div className="flex justify-between items-center">
                         <p className="text-sm text-gray-500">{task.assignee.name}</p>
-                        <p className="text-sm text-gray-500">{task.status}</p>
+                        <p className="text-sm text-gray-500">{getStatusLabel(task.status)}</p>
                     </div>
                 </Card>
             ))}

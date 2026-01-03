@@ -36,6 +36,16 @@ export type SigninFormState =
     message?: string;
 }
 
+export const projectSchema = z.object({
+    name: z
+        .string()
+        .min(1, { error: "Name is required" })
+        .max(20, { error: "Name must be at most 20 characters long" }),
+    description: z
+        .string()
+        .max(200, { error: "Description must be at most 200 characters long" }),
+});
+
 export type CreateProjectFormState = 
 {
     errors?: {
@@ -44,6 +54,21 @@ export type CreateProjectFormState =
     };
     message?: string;
 }
+
+export const taskSchema = z.object({
+    name: z
+        .string()
+        .min(1, { error: "Name is required" })
+        .max(20, { error: "Name must be at most 20 characters long" }),
+    description: z
+        .string()
+        .max(200, { error: "Description must be at most 200 characters long" }),
+    status: z
+        .enum(["TODO", "IN_PROGRESS", "DONE"], { error: "Status is required" }),
+    projectId: z
+        .string()
+        .min(1, { error: "Project is required" }),
+});
 
 export type CreateTaskFormState = 
 {

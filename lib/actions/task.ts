@@ -4,6 +4,9 @@ import { verifySession } from "../dal/dal";
 import { TaskStatus } from "@/generated/prisma/client";
 import { CreateTaskFormState } from "../definitions";
 import { getTasksCache as getTasksCacheDal } from "@/lib/dal/task";
+import { taskSchema } from "../definitions";
+import { revalidatePath } from "next/cache";
+
 export async function createTask(
     prevState: CreateTaskFormState | undefined,
     formData: FormData
@@ -12,29 +15,24 @@ export async function createTask(
     if (!session?.userId) {
         throw new Error("Unauthorized");
     }
-    const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
-    const projectId = formData.get("projectId") as string;
-    if (!name || !description || !projectId) {
-        return {
-            errors: {
-                name: ["Name is required"],
-                description: ["Description is required"],
-                projectId: ["Project ID is required"],
-            },
-        };
+    
+    const validatedFields = taskSchema.safeParse({
+        name: formData.get("name") as string,
+        description: formData.get("description") as string,
+        projectId: formData.get("projectId") as string,
+        status: formData.get("status") as TaskStatus,
+    });
+    if (!validatedFields.success) {
+        return { errors: validatedFields.error.flatten().fieldErrors };
     }
+    const { name, description, projectId, status } = validatedFields.data;
     const task = await createTaskDal(name, description, projectId, session.userId as string);
     if (!task) {
         return {
-            errors: {
-                name: ["Failed to create task"],
-            },
+            message: "Failed to create task",
         };
     }
-    return {
-        message: "Task created successfully",
-    };
+    revalidatePath("/dashboard/tasks");
 }
 
 export async function getTasks() {

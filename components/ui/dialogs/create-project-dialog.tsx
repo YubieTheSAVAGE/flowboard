@@ -21,15 +21,6 @@ export function CreateProjectDialog({ trigger, title, description }: { trigger: 
   const [state, action, pending] = useActionState(createProject, undefined)
   const [open, setOpen] = useState(false)
 
-  useEffect(() => {
-    if (state?.message) {
-      const timer = setTimeout(() => {
-        setOpen(false)
-      }, 1000)
-      return () => clearTimeout(timer)
-    }
-  }, [state?.message])
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -45,7 +36,7 @@ export function CreateProjectDialog({ trigger, title, description }: { trigger: 
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
+              <Label required htmlFor="name">Name</Label>
               <Input id="name" name="name" />
               {state?.errors?.name && <p className="text-xs text-red-500">{state.errors.name.join(", ")}</p>}
             </div>
@@ -54,7 +45,7 @@ export function CreateProjectDialog({ trigger, title, description }: { trigger: 
               <Textarea id="description" name="description" />
               {state?.errors?.description && <p className="text-xs text-red-500">{state.errors.description.join(", ")}</p>}
             </div>
-            {state?.message && <p className="text-xs text-green-500">{state.message}</p>}
+            {state?.message && <p className="text-xs text-red-500">{state.message}</p>}
           </div>
           <DialogFooter>
             <DialogClose asChild>

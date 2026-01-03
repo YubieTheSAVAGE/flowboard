@@ -1,8 +1,8 @@
 "use server"
 import { createProject as createProjectDal, getProjects as getProjectsDal, getProjectsCache as getProjectsCacheDal } from "@/lib/dal/project";
 import { verifySession } from "../dal/dal";
-import { CreateProjectFormState } from "@/lib/definitions";
-import { cache } from "react";
+import { CreateProjectFormState, projectSchema } from "@/lib/definitions";
+import { revalidatePath } from "next/cache";
 
 export async function createProject(
     prevState: CreateProjectFormState | undefined,
@@ -11,36 +11,26 @@ export async function createProject(
     const session = await verifySession();
     if (!session?.userId) {
         return {
-            errors: {
-                name: ["Unauthorized"],
-            },
+            message: "Unauthorized",
         };
     }
-    const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
-
-    const errors: { name?: string[]; description?: string[] } = {};
-    if (!name) {
-        errors.name = ["Name is required"];
-    }
-    if (!description) {
-        errors.description = ["Description is required"];
-    }
-    if (Object.keys(errors).length > 0) {
-        return { errors };
-    }
     
+    const validatedFields = projectSchema.safeParse({
+        name: formData.get("name") as string,
+        description: formData.get("description") as string,
+    });
+    if (!validatedFields.success) {
+        return { errors: validatedFields.error.flatten().fieldErrors };
+    }
+    const { name, description } = validatedFields.data;
+
     const project = await createProjectDal(name, description, session.userId as string);
     if (!project) {
         return {
-            errors: {
-                name: ["Failed to create project"],
-            },
+            message: "Failed to create project",
         };
-    }
-    return {
-        message: "Project created successfully",
-    };
+    } 
+    revalidatePath("/dashboard/projects");
 }
 
 export async function getProjects() {
