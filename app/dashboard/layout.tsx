@@ -1,10 +1,11 @@
+
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { getUser } from "@/lib/dal/dal";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Breadcrumb, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbLink, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
-
+import { LayoutBreadcrumb } from "@/components/ui/layout-breadcrumb";
 
 export default async function DashboardLayout({
   children,
@@ -29,13 +30,7 @@ export default async function DashboardLayout({
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Dashboard
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Home</BreadcrumbPage>
+                  <LayoutBreadcrumb />
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
