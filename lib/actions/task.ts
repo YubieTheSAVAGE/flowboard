@@ -2,7 +2,7 @@
 import { createTask as createTaskDal, getTasks as getTasksDal, updateTask as updateTaskDal } from "@/lib/dal/task";
 import { verifySession } from "../dal/dal";
 import { TaskStatus } from "@/generated/prisma/client";
-import { CreateTaskFormState } from "../definitions";
+import { CreateTaskFormState, UpdateTaskFormState, updateTaskSchema } from "../definitions";
 import { getTasksCache as getTasksCacheDal } from "@/lib/dal/task";
 import { taskSchema } from "../definitions";
 import { revalidatePath } from "next/cache";
@@ -54,34 +54,36 @@ export async function getTasksCache() {
     return tasks;
 }   
 
-export async function updateTask(formData: FormData) {
+export async function updateTask(
+    id: string,
+    prevState: UpdateTaskFormState | undefined,
+    formData: FormData
+) {
     const session = await verifySession();
     if (!session?.userId) {
-        throw new Error("Unauthorized");
-    }
-    const id = formData.get("id") as string;
-    const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
-    const status = formData.get("status") as TaskStatus;
-    if (!id || !name || !description || !status) {
         return {
-            errors: {
-                id: ["Id is required"],
-                name: ["Name is required"],
-                description: ["Description is required"],
-                status: ["Status is required"],
-            },
+            message: "Unauthorized",
         };
     }
+    
+    const validatedFields = updateTaskSchema.safeParse({
+        id,
+        name: formData.get("name") as string,
+        description: formData.get("description") as string,
+    });
+    
+    if (!validatedFields.success) {
+        return { errors: validatedFields.error.flatten().fieldErrors };
+    }
+    
+    const { name, description } = validatedFields.data;
+    const status = formData.get("status") as TaskStatus;
+    
     const task = await updateTaskDal(id, { name, description, status });
     if (!task) {
         return {
-            errors: {
-                id: ["Failed to update task"],
-            },
+            message: "Failed to update task",
         };
     }
-    return {
-        success: "Task updated successfully",
-    };
+    revalidatePath("/dashboard/tasks");
 }

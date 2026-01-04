@@ -2,6 +2,10 @@ import { getProjects } from "@/lib/actions/project";
 import { Card } from "./card";
 import { Suspense } from "react";
 import { Skeleton } from "./skeleton";
+import { Button } from "./button";
+import { PencilIcon } from "lucide-react";
+import { EditProjectDialog } from "./dialogs/edit-project-dialog";
+import { Project } from "@/generated/prisma/client";
 
 async function ProjectsList() {
     const result = await getProjects();
@@ -9,12 +13,32 @@ async function ProjectsList() {
     if (result.errors) {
         return <p className="text-red-500">{result.errors.projects[0]}</p>;
     }
+
+    if (!result.projects) {
+        return (
+            <div className="flex justify-center items-center h-full">
+                <p className="text-red-600 italic">No projects found</p>
+            </div>
+        )
+    }
     
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {result.projects.map((project) => (
-                <Card key={project.id} className="p-4">
-                    <h3 className="text-lg font-bold">{project.name}</h3>
+                <Card key={project.id} className="group p-4 hover:shadow-xl transition-shadow duration-300">
+                    <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-bold">{project.name}</h3>
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <EditProjectDialog
+                                trigger={
+                                    <PencilIcon className="w-4 h-4 cursor-pointer" />
+                                }
+                                title="Edit Project"
+                                description="Edit the project details"
+                                project={project as Project}
+                            />
+                        </div>
+                    </div>
                     <p className="text-sm text-gray-500">{project.description}</p>
                 </Card>
             ))}

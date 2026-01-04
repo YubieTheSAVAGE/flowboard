@@ -3,24 +3,46 @@ import { Suspense } from "react";
 import { Skeleton } from "./skeleton";
 import { getTasks } from "@/lib/actions/task";
 import { getStatusLabel } from "@/lib/utils";
+import { PencilIcon } from "lucide-react";
+import { EditTaskDialog } from "./dialogs/edit-task-dialog";
 
 async function TasksList() {
     const result = await getTasks();
-    
+
+    if (!result.tasks) {
+        return (
+            <div className="flex justify-center items-center h-full">
+                <p className="text-red-600 italic">No tasks found</p>
+            </div>
+        )
+    }
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {result.tasks.map((task) => (
-                <Card key={task.id} className="p-4">
+                <Card key={task.id} className="group flex flex-col p-4 hover:shadow-xl transition-shadow duration-300 min-h-[140px]">
                     <div className="flex justify-between items-center">
                         <h3 className="text-lg font-bold">{task.name}</h3>
-                        <p className="text-sm text-gray-500">{task.project.name}</p>
+                        <div className="relative flex items-center gap-2">
+                            <p className="text-sm text-gray-500 opacity-100 group-hover:opacity-0 transition-opacity duration-300">{task.project.name}</p>
+                            <div className="absolute right-0 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-300">
+                                <EditTaskDialog
+                                    trigger={
+                                        <PencilIcon className="w-4 h-4 cursor-pointer" />
+                                    }
+                                    title="Edit Task"
+                                    description="Edit the task details"
+                                    task={task}
+                                />
+                            </div>
+                        </div>
                     </div>
                     {!task.description.length ?
-                    <p className="text-sm text-gray-500 italic">No description</p>
-                    :
-                    <p className="text-sm text-gray-500">{task.description}</p>
+                        <p className="text-sm text-gray-500 italic">No description</p>
+                        :
+                        <p className="text-sm text-gray-500">{task.description}</p>
                     }
-                    <div className="flex justify-between items-center">
+                    <div className="mt-auto flex justify-between items-end">
                         <p className="text-sm text-gray-500">{task.assignee.name}</p>
                         <p className="text-sm text-gray-500">{getStatusLabel(task.status)}</p>
                     </div>

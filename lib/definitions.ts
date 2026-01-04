@@ -79,3 +79,49 @@ export type CreateTaskFormState =
     };
     message?: string;
 }
+
+export const updateProjectSchema = z.object({
+    id: z
+        .string()
+        .min(1, { error: "Id is required" }),
+    name: z
+        .string()
+        .min(1, { error: "Name is required" })
+        .max(20, { error: "Name must be at most 20 characters long" }),
+    description: z
+        .string()
+        .max(200, { error: "Description must be at most 200 characters long" }),
+});
+
+export type UpdateProjectFormState = 
+{
+    errors?: {
+        id?: string[];
+        name?: string[];
+        description?: string[];
+    };
+    message?: string;
+}
+
+export const updateTaskSchema = z.object({
+    id: z
+        .string()
+        .min(1, { error: "Id is required" }),
+    name: z
+        .string()
+        .min(1, { error: "Name is required" })
+        .max(20, { error: "Name must be at most 20 characters long" }),
+    description: z
+        .string()
+        .max(200, { error: "Description must be at most 200 characters long" }),
+});
+
+export type UpdateTaskFormState = 
+{
+    errors?: {
+        id?: string[];
+        name?: string[];
+        description?: string[];
+    };
+    message?: string;
+}

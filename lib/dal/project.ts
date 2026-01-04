@@ -35,3 +35,11 @@ export const getProjectsCache = cache(async () => {
     const projects = await getProjects();
     return projects;
 })
+
+export const updateProject = async (id: string, name: string, description: string) => {
+    const project = await prisma.project.update({
+        where: { id },
+        data: { name, description, updatedAt: new Date() },
+    })
+    return project;
+}
