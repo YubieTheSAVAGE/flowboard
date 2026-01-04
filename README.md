@@ -1,20 +1,28 @@
 # FlowBoard
+Minimalist SaaS dashboard built with Next.js, TypeScript, Tailwind CSS, shadcn/ui.
 
-FlowBoard is a minimalist SaaS dashboard designed to help small teams manage projects and track activity in a clean and focused interface.
+## Features
+- Authentication & Authorization (NextAuth + DAL)
+- Project & Task management with CRUD
+- Loading, error, and empty states for UX polish
+- Minimalist dashboard with sidebar & header
 
-## Tech Stack
-- Next.js (App Router)
-- TypeScript
-- Tailwind CSS
-- Prisma
-- PostgreSQL
-- Auth.js
+## Screenshots
 
-## Features (WIP)
-- Authentication
-- Role-based dashboard
-- Projects & tasks management
-- Analytics overview
+### Sign In
+![Sign In](/public/signin.png)
+
+### Projects
+![Projects](/public/projects.png)
+
+### Create Project
+![Create Project](/public/createproject.png)
+
+### Tasks
+![Tasks](/public/tasks.png)
+
+### Create Task
+![Create Task](/public/createtask.png)
 
 ## Status
 🚧 In active development
