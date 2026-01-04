@@ -28,7 +28,7 @@ async function ProjectsList() {
                 <Card key={project.id} className="group p-4 hover:shadow-xl transition-shadow duration-300">
                     <div className="flex justify-between items-center">
                         <h3 className="text-lg font-bold">{project.name}</h3>
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <div className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                             <EditProjectDialog
                                 trigger={
                                     <PencilIcon className="w-4 h-4 cursor-pointer" />
