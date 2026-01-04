@@ -62,7 +62,7 @@ const data = {
   ],
 }
 
-export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & { user: { name: string; email: string; avatar: string } }) {
+export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & { user: { name: string; email: string; role: string } }) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
