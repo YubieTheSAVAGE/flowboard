@@ -1,5 +1,12 @@
 "use server"
-import { createProject as createProjectDal, getProjects as getProjectsDal, getProjectsCache as getProjectsCacheDal, updateProject as updateProjectDal } from "@/lib/dal/project";
+import 
+{ 
+    createProject as createProjectDal, 
+    getProjects as getProjectsDal, 
+    getProjectsCache as getProjectsCacheDal, 
+    updateProject as updateProjectDal, 
+    deleteProject as deleteProjectDal 
+} from "@/lib/dal/project";
 import { verifySession } from "../dal/dal";
 import { CreateProjectFormState, projectSchema, UpdateProjectFormState } from "@/lib/definitions";
 import { revalidatePath } from "next/cache";
@@ -86,6 +93,22 @@ export async function updateProject(id: string, prevState: UpdateProjectFormStat
     if (!project) {
         return {
             message: "Failed to update project",
+        };
+    }
+    revalidatePath("/dashboard/projects");
+}
+
+export async function deleteProject(id: string) {
+    const session = await verifySession();
+    if (!session?.userId) {
+        return {
+            message: "Unauthorized",
+        };
+    }
+    const project = await deleteProjectDal(id);
+    if (!project) {
+        return {
+            message: "Failed to delete project",
         };
     }
     revalidatePath("/dashboard/projects");

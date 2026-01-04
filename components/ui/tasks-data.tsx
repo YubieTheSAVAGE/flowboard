@@ -3,8 +3,9 @@ import { Suspense } from "react";
 import { Skeleton } from "./skeleton";
 import { getTasks } from "@/lib/actions/task";
 import { getStatusLabel } from "@/lib/utils";
-import { PencilIcon } from "lucide-react";
+import { PencilIcon, TrashIcon } from "lucide-react";
 import { EditTaskDialog } from "./dialogs/edit-task-dialog";
+import { DeleteTaskDialog } from "./dialogs/delete-task-dialog";
 
 async function TasksList() {
     const result = await getTasks();
@@ -25,7 +26,7 @@ async function TasksList() {
                         <h3 className="text-lg font-bold">{task.name}</h3>
                         <div className="relative flex items-center gap-2">
                             <p className="text-sm text-gray-500 hidden md:block md:opacity-100 md:group-hover:opacity-0 transition-opacity duration-300">{task.project.name}</p>
-                            <div className="opacity-100 md:absolute md:right-0 md:opacity-0 md:group-hover:opacity-100 md:pointer-events-none md:group-hover:pointer-events-auto transition-opacity duration-300">
+                            <div className="flex items-center gap-2 opacity-100 md:absolute md:right-0 md:opacity-0 md:group-hover:opacity-100 md:pointer-events-none md:group-hover:pointer-events-auto transition-opacity duration-300">
                                 <EditTaskDialog
                                     trigger={
                                         <PencilIcon className="w-4 h-4 cursor-pointer" />
@@ -33,6 +34,13 @@ async function TasksList() {
                                     title="Edit Task"
                                     description="Edit the task details"
                                     task={task}
+                                />
+                                <DeleteTaskDialog
+                                    trigger={
+                                        <TrashIcon className="w-4 h-4 cursor-pointer text-destructive hover:text-destructive/80" />
+                                    }
+                                    taskId={task.id}
+                                    taskName={task.name}
                                 />
                             </div>
                         </div>

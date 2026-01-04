@@ -44,3 +44,10 @@ export const updateTask = async (id: string, data: { name?: string, description?
     });
     return task;
 }
+
+export const deleteTask = async (id: string) => {
+    const task = await prisma.task.delete({
+        where: { id },
+    });
+    return task;
+}

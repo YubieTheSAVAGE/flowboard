@@ -1,9 +1,15 @@
 "use server"
-import { createTask as createTaskDal, getTasks as getTasksDal, updateTask as updateTaskDal } from "@/lib/dal/task";
+import 
+{ 
+    createTask as createTaskDal, 
+    getTasks as getTasksDal, 
+    updateTask as updateTaskDal, 
+    deleteTask as deleteTaskDal,
+    getTasksCache as getTasksCacheDal 
+} from "@/lib/dal/task";
 import { verifySession } from "../dal/dal";
 import { TaskStatus } from "@/generated/prisma/client";
 import { CreateTaskFormState, UpdateTaskFormState, updateTaskSchema } from "../definitions";
-import { getTasksCache as getTasksCacheDal } from "@/lib/dal/task";
 import { taskSchema } from "../definitions";
 import { revalidatePath } from "next/cache";
 
@@ -83,6 +89,22 @@ export async function updateTask(
     if (!task) {
         return {
             message: "Failed to update task",
+        };
+    }
+    revalidatePath("/dashboard/tasks");
+}
+
+export async function deleteTask(id: string) {
+    const session = await verifySession();
+    if (!session?.userId) {
+        return {
+            message: "Unauthorized",
+        };
+    }
+    const task = await deleteTaskDal(id);
+    if (!task) {
+        return {
+            message: "Failed to delete task",
         };
     }
     revalidatePath("/dashboard/tasks");

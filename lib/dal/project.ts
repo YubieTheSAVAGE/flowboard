@@ -43,3 +43,18 @@ export const updateProject = async (id: string, name: string, description: strin
     })
     return project;
 }
+
+export const deleteProject = async (id: string) => {
+    if (!await prisma.project.findUnique({ where: { id } })) {
+        return false;
+    }
+    // Delete all tasks associated with the project first
+    await prisma.task.deleteMany({
+        where: { projectId: id }
+    });
+    // Then delete the project itself
+    await prisma.project.delete({
+        where: { id }
+    });
+    return true;
+}
