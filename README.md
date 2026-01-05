@@ -1,39 +1,39 @@
 # FlowBoard
-Minimalist SaaS dashboard built with Next.js, TypeScript, Tailwind CSS, shadcn/ui.
 
-## Features
-- Authentication & Authorization (NextAuth + DAL)
-- Project & Task management with CRUD
-- Loading, error, and empty states for UX polish
-- Minimalist dashboard with sidebar & header
+## What Problem Does It Solve?
 
-## Role-Based UX & Authorization
+FlowBoard helps small teams manage projects and tasks with role-based access, reducing user errors and improving clarity in multi-user SaaS environments.
 
-FlowBoard implements role-based UI logic to improve usability and prevent invalid actions before reaching the backend.
+## Why This Architecture?
 
-- UI adapts based on user role (Owner / Member)
-- Permissions are centralized and reusable
-- Backend remains the source of truth
-- Frontend improves clarity, safety, and performance
+**App Router** — Next.js 16's App Router gives us layouts, loading states, and error boundaries out of the box. Each route segment handles its own data fetching, which keeps things modular.
 
-This approach mirrors real-world SaaS authorization patterns.
+**Server Actions** — Instead of building a separate API layer, server actions let us mutate data directly from the UI. Less boilerplate, fewer moving parts.
+
+**Data Access Layer (DAL)** — All database queries go through a single layer. This keeps business logic separate from UI code and makes authorization checks consistent.
+
+**Role-based UX** — The UI adapts to what you can actually do. If you're not the owner, you won't see the delete button—no confusing error messages, just a cleaner experience.
+
+## Key Engineering Decisions
+
+- Role-based UX to prevent invalid user actions before reaching the backend
+- Centralized permission logic for maintainability
+- Backend-enforced authorization for security
+- Focus on predictable UI states (loading, error, empty)
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Prisma
+- NextAuth.js
 
 ## Screenshots
 
-### Sign In
-![Sign In](/public/signin.png)
-
-### Projects
 ![Projects](/public/projects.png)
 
-### Create Project
-![Create Project](/public/createproject.png)
-
-### Tasks
 ![Tasks](/public/tasks.png)
 
-### Create Task
-![Create Task](/public/createtask.png)
-
-## Status
-🚧 In active development
+![Sign In](/public/signin.png)
