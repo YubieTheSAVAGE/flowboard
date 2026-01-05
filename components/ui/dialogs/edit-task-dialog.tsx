@@ -13,11 +13,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { updateTask } from "@/lib/actions/task"
-import { useActionState, useState } from "react"
+import { useActionState, useEffect, useState } from "react"
 import { SpinningCircle } from "../spinning-circle"
 import { Textarea } from "../textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TaskStatus } from "@/generated/prisma/client"
+import { toast } from "sonner"
 
 const statuses = [
   { value: "TODO", label: "To Do" },
@@ -35,15 +36,28 @@ interface EditTaskDialogProps {
     description: string
     status: TaskStatus
   }
+  canUpdateTask: boolean
 }
 
-export function EditTaskDialog({ trigger, title, description, task }: EditTaskDialogProps) {
+export function EditTaskDialog({ trigger, title, description, task, canUpdateTask }: EditTaskDialogProps) {
   const [state, action, pending] = useActionState(updateTask.bind(null, task.id), undefined)
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(state.message)
+      setOpen(false)
+      state.message = "";
+    }
+  }, [state])
   
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      {canUpdateTask ? (
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      ) : (
+        <span onClick={() => toast.error("You are not authorized to update this task")}>{trigger}</span>
+      )}
       <DialogContent className="sm:max-w-[425px]">
         <form action={action}>
           <DialogHeader>

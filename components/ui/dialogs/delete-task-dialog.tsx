@@ -12,27 +12,43 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/dialogs/alert-dialog"
 import { deleteTask } from "@/lib/actions/task"
-import { useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { SpinningCircle } from "../spinning-circle"
+import { toast } from "sonner"
 
 interface DeleteTaskDialogProps {
   trigger: React.ReactNode
   taskId: string
   taskName: string
+  canDeleteTask: boolean
 }
 
-export function DeleteTaskDialog({ trigger, taskId, taskName }: DeleteTaskDialogProps) {
+export function DeleteTaskDialog({ trigger, taskId, taskName, canDeleteTask }: DeleteTaskDialogProps) {
   const [isPending, startTransition] = useTransition()
+  const [result, setResult] = useState<{ success?: boolean, message?: string } | null>(null)
 
   const handleDelete = () => {
     startTransition(async () => {
-      await deleteTask(taskId)
+      const result = await deleteTask(taskId)
+      setResult(result as { success: boolean, message: string })
     })
   }
 
+  useEffect(() => {
+    if (result?.success) 
+      toast.success(result.message)
+    else if (result?.message)
+      toast.error(result?.message || "Failed to delete task")
+    setResult(null)
+  }, [result])
+
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      {canDeleteTask ? (
+        <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      ) : (
+        <span onClick={() => toast.error("You are not authorized to delete this task")}>{trigger}</span>
+      )}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Task</AlertDialogTitle>

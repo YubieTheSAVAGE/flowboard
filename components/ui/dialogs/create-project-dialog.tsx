@@ -16,16 +16,36 @@ import { createProject } from "@/lib/actions/project"
 import { useActionState, useEffect, useState } from "react"
 import { SpinningCircle } from "../spinning-circle"
 import { Textarea } from "../textarea"
+import { toast } from "sonner"
 
-export function CreateProjectDialog({ trigger, title, description }: { trigger: React.ReactNode, title: string, description: string }) {
+interface CreateProjectDialogProps {
+  trigger: React.ReactNode
+  title: string
+  description: string
+  canCreateProject: boolean
+}
+
+export function CreateProjectDialog({ trigger, title, description, canCreateProject }: CreateProjectDialogProps) {
   const [state, action, pending] = useActionState(createProject, undefined)
   const [open, setOpen] = useState(false)
-
+  
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(state.message)
+      setOpen(false)
+      state.message = "";
+    }
+  }, [state])
+  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">{trigger}</Button>
-      </DialogTrigger>
+      {canCreateProject ? (
+        <DialogTrigger asChild>
+          <Button variant="outline">{trigger}</Button>
+        </DialogTrigger>
+      ) : (
+        <Button variant="outline" className="cursor-not-allowed" onClick={() => toast.error("You are not authorized to create a project")}>{ trigger }</Button>
+      )}
       <DialogContent className="sm:max-w-[425px]">
         <form action={action}>
           <DialogHeader>

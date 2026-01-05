@@ -24,11 +24,13 @@ interface EditProjectDialogProps {
   title: string
   description: string
   project: Project
+  canUpdateProject: boolean
 }
 
-export function EditProjectDialog({ trigger, title, description, project }: EditProjectDialogProps) {
+export function EditProjectDialog({ trigger, title, description, project, canUpdateProject }: EditProjectDialogProps) {
   const [state, action, pending] = useActionState(updateProject.bind(null, project.id), undefined)
   const [open, setOpen] = useState(false)
+  
   useEffect(() => {
     if (state?.success) {
       toast.success(state.message)
@@ -36,9 +38,14 @@ export function EditProjectDialog({ trigger, title, description, project }: Edit
       state.message = "";
     }
   }, [state])
+  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      {canUpdateProject ? (
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+      ) : (
+        <span className="cursor-not-allowed" onClick={() => toast.error("You are not authorized to update this project")}>{trigger}</span>
+      )}
       <DialogContent className="sm:max-w-[425px]">
         <form action={action}>
           <DialogHeader>

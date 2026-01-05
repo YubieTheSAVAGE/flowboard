@@ -18,6 +18,7 @@ import { Textarea } from "../textarea"
 import { createTask } from "@/lib/actions/task"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getProjectsCache } from "@/lib/actions/project"
+import { toast } from "sonner"
 
 const statuses = [
   { value: "TODO", label: "To Do" },
@@ -25,7 +26,14 @@ const statuses = [
   { value: "DONE", label: "Done" },
 ]
 
-export function CreateTaskDialog({ trigger, title, description }: { trigger: React.ReactNode, title: string, description: string }) {
+interface CreateTaskDialogProps {
+  trigger: React.ReactNode
+  title: string
+  description: string
+  canCreateTask: boolean
+}
+
+export function CreateTaskDialog({ trigger, title, description, canCreateTask }: CreateTaskDialogProps) {
   const [state, action, pending] = useActionState(createTask, undefined)
   const [open, setOpen] = useState(false)
   const [projects, setProjects] = useState<Array<{ id: string; name: string }>>([])
@@ -34,15 +42,27 @@ export function CreateTaskDialog({ trigger, title, description }: { trigger: Rea
     getProjectsCache().then((result) => {
       setProjects(result.projects)
     }).catch((error) => {
-      console.error("Failed to load projects:", error)
+      toast.error("Failed to load projects: " + error.message)
     })
   }, [])
 
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(state.message)
+      setOpen(false)
+      state.message = "";
+    }
+  }, [state])
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline">{trigger}</Button>
-      </DialogTrigger>
+      {canCreateTask ? (
+        <DialogTrigger asChild>
+          <Button variant="outline">{trigger}</Button>
+        </DialogTrigger>
+      ) : (
+        <Button variant="outline" className="cursor-not-allowed" onClick={() => toast.error("You are not authorized to create a task")}>{trigger}</Button>
+      )}
       <DialogContent className="sm:max-w-[425px]">
         <form action={action}>
           <DialogHeader>

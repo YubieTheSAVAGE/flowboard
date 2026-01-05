@@ -11,17 +11,16 @@ export const metadata: Metadata = {
 };
 
 export default async function Projects() {
-    const user = await getUser();
-
-
+    const user = await getUser()
     return (
         <>
             <div className="flex justify-end">
-                {
-                    canCreateProject(user?.role as Role) && (
-                        <CreateProjectDialog trigger="Create Project" title="Create Project" description="Create a new project to manage your tasks." />
-                    )
-                }
+                <CreateProjectDialog 
+                    trigger="Create Project" 
+                    title="Create Project" 
+                    description="Create a new project to manage your tasks." 
+                    canCreateProject={canCreateProject(user?.role as Role)} 
+                />
             </div>
             <ProjectsData />
         </>

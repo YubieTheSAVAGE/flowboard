@@ -2,7 +2,6 @@ import { getProjects } from "@/lib/actions/project";
 import { Card } from "./card";
 import { Suspense } from "react";
 import { Skeleton } from "./skeleton";
-import { Button } from "./button";
 import { PencilIcon, TrashIcon } from "lucide-react";
 import { EditProjectDialog } from "./dialogs/edit-project-dialog";
 import { Project, Role } from "@/generated/prisma/client";
@@ -33,29 +32,23 @@ async function ProjectsList() {
                     <div className="flex justify-between items-center">
                         <h3 className="text-lg font-bold">{project.name}</h3>
                         <div className="flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-                            {
-                                canUpdateProject(user?.role as Role, project.ownerId, user?.id as string) && (
-                                    <EditProjectDialog
-                                        trigger={
-                                            <PencilIcon className="w-4 h-4 cursor-pointer" />
-                                        }
-                                        title="Edit Project"
-                                        description="Edit the project details"
-                                        project={project as Project}
-                                    />
-                                )
-                            }
-                            {
-                                canDeleteProject(user?.role as Role, project.ownerId, user?.id as string) && (
-                                    <DeleteProjectDialog
-                                        trigger={
-                                            <TrashIcon className="w-4 h-4 cursor-pointer text-destructive hover:text-destructive/80" />
-                                        }
-                                        projectId={project.id}
-                                        projectName={project.name}
-                                    />
-                                )
-                            }
+                            <EditProjectDialog
+                                trigger={
+                                    <PencilIcon className="w-4 h-4 cursor-pointer" />
+                                }
+                                title="Edit Project"
+                                description="Edit the project details"
+                                project={project as Project}
+                                canUpdateProject={canUpdateProject(user?.role as Role, project.ownerId, user?.id as string)}
+                            />
+                            <DeleteProjectDialog
+                                trigger={
+                                    <TrashIcon className="w-4 h-4 cursor-pointer text-destructive hover:text-destructive/80" />
+                                }
+                                projectId={project.id}
+                                projectName={project.name}
+                                canDeleteProject={canDeleteProject(user?.role as Role, project.ownerId, user?.id as string)}
+                            />
                         </div>
                     </div>
                     <p className="text-sm text-gray-500">{project.description}</p>

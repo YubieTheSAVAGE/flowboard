@@ -30,29 +30,23 @@ async function TasksList() {
                         <div className="relative flex items-center gap-2">
                             <p className="text-sm text-gray-500 hidden md:block md:opacity-100 md:group-hover:opacity-0 transition-opacity duration-300">{task.project.name}</p>
                             <div className="flex items-center gap-2 opacity-100 md:absolute md:right-0 md:opacity-0 md:group-hover:opacity-100 md:pointer-events-none md:group-hover:pointer-events-auto transition-opacity duration-300">
-                                {
-                                    canUpdateTask(user?.role as Role, task.assigneeId, user?.id as string) && (
-                                        <EditTaskDialog
-                                            trigger={
-                                                <PencilIcon className="w-4 h-4 cursor-pointer" />
-                                            }
-                                            title="Edit Task"
-                                            description="Edit the task details"
-                                            task={task}
-                                        />
-                                    )
-                                }
-                                {
-                                    canDeleteTask(user?.role as Role, task.assigneeId, user?.id as string) && (
-                                        <DeleteTaskDialog
-                                            trigger={
-                                                <TrashIcon className="w-4 h-4 cursor-pointer text-destructive hover:text-destructive/80" />
-                                            }
-                                            taskId={task.id}
-                                            taskName={task.name}
-                                        />
-                                    )
-                                }
+                                <EditTaskDialog
+                                    trigger={
+                                        <PencilIcon className="w-4 h-4 cursor-pointer" />
+                                    }
+                                    title="Edit Task"
+                                    description="Edit the task details"
+                                    task={task}
+                                    canUpdateTask={canUpdateTask(user?.role as Role, task.assigneeId, user?.id as string)}
+                                />
+                                <DeleteTaskDialog
+                                    trigger={
+                                        <TrashIcon className="w-4 h-4 cursor-pointer text-destructive hover:text-destructive/80" />
+                                    }
+                                    taskId={task.id}
+                                    taskName={task.name}
+                                    canDeleteTask={canDeleteTask(user?.role as Role, task.assigneeId, user?.id as string)}
+                                />
                             </div>
                         </div>
                     </div>
