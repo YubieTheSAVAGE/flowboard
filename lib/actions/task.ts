@@ -12,6 +12,7 @@ import { TaskStatus } from "@/generated/prisma/client";
 import { CreateTaskFormState, UpdateTaskFormState, updateTaskSchema } from "../definitions";
 import { taskSchema } from "../definitions";
 import { revalidatePath } from "next/cache";
+import { toast } from "sonner";
 
 export async function createTask(
     prevState: CreateTaskFormState | undefined,
@@ -39,6 +40,10 @@ export async function createTask(
         };
     }
     revalidatePath("/dashboard/tasks");
+    return {
+        success: true,
+        message: "Task created successfully",
+    };
 }
 
 export async function getTasks() {
@@ -92,6 +97,10 @@ export async function updateTask(
         };
     }
     revalidatePath("/dashboard/tasks");
+    return {
+        success: true,
+        message: "Task updated successfully",
+    };
 }
 
 export async function deleteTask(id: string) {
@@ -108,4 +117,8 @@ export async function deleteTask(id: string) {
         };
     }
     revalidatePath("/dashboard/tasks");
+    return {
+        success: true,
+        message: "Task deleted successfully",
+    };
 }

@@ -38,6 +38,10 @@ export async function createProject(
         };
     } 
     revalidatePath("/dashboard/projects");
+    return {
+        success: true,
+        message: "Project created successfully",
+    };
 }
 
 export async function getProjects() {
@@ -96,6 +100,10 @@ export async function updateProject(id: string, prevState: UpdateProjectFormStat
         };
     }
     revalidatePath("/dashboard/projects");
+    return {
+        success: true,
+        message: "Project updated successfully",
+    };
 }
 
 export async function deleteProject(id: string) {
@@ -112,4 +120,8 @@ export async function deleteProject(id: string) {
         };
     }
     revalidatePath("/dashboard/projects");
+    return {
+        success: true,
+        message: "Project deleted successfully",
+    };
 }

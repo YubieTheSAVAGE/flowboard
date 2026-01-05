@@ -1,9 +1,8 @@
-
+import { Toaster } from "@/components/ui/sonner"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { getUser } from "@/lib/dal/dal";
 import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Breadcrumb, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbLink, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { LayoutBreadcrumb } from "@/components/ui/layout-breadcrumb";
 
@@ -33,6 +32,7 @@ export default async function DashboardLayout({
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           {children}
         </div>
+        <Toaster />
       </SidebarInset>
     </SidebarProvider>
   )

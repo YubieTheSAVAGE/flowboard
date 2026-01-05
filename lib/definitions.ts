@@ -53,6 +53,7 @@ export type CreateProjectFormState =
         description?: string[];
     };
     message?: string;
+    success?: boolean;
 }
 
 export const taskSchema = z.object({
@@ -78,6 +79,7 @@ export type CreateTaskFormState =
         projectId?: string[];
     };
     message?: string;
+    success?: boolean;
 }
 
 export const updateProjectSchema = z.object({
@@ -101,6 +103,7 @@ export type UpdateProjectFormState =
         description?: string[];
     };
     message?: string;
+    success?: boolean;
 }
 
 export const updateTaskSchema = z.object({
@@ -124,4 +127,5 @@ export type UpdateTaskFormState =
         description?: string[];
     };
     message?: string;
+    success?: boolean;
 }

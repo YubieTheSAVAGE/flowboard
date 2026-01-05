@@ -13,10 +13,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { updateProject } from "@/lib/actions/project"
-import { useActionState, useState } from "react"
+import { useActionState, useEffect, useState } from "react"
 import { SpinningCircle } from "../spinning-circle"
 import { Textarea } from "../textarea"
 import { Project } from "@/generated/prisma/client"
+import { toast } from "sonner"
 
 interface EditProjectDialogProps {
   trigger: React.ReactNode
@@ -28,6 +29,13 @@ interface EditProjectDialogProps {
 export function EditProjectDialog({ trigger, title, description, project }: EditProjectDialogProps) {
   const [state, action, pending] = useActionState(updateProject.bind(null, project.id), undefined)
   const [open, setOpen] = useState(false)
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(state.message)
+      setOpen(false)
+      state.message = "";
+    }
+  }, [state])
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
