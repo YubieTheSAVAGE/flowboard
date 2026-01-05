@@ -7,6 +7,17 @@ Minimalist SaaS dashboard built with Next.js, TypeScript, Tailwind CSS, shadcn/u
 - Loading, error, and empty states for UX polish
 - Minimalist dashboard with sidebar & header
 
+## Role-Based UX & Authorization
+
+FlowBoard implements role-based UI logic to improve usability and prevent invalid actions before reaching the backend.
+
+- UI adapts based on user role (Owner / Member)
+- Permissions are centralized and reusable
+- Backend remains the source of truth
+- Frontend improves clarity, safety, and performance
+
+This approach mirrors real-world SaaS authorization patterns.
+
 ## Screenshots
 
 ### Sign In
