@@ -5,6 +5,7 @@ import {
   BookOpen,
   Bot,
   Command,
+  FileText,
   Frame,
   LayoutDashboard,
   LifeBuoy,
@@ -47,6 +48,12 @@ const data = {
       url: "/dashboard/tasks",
       icon: List,
     },
+    {
+      title: "Logs",
+      url: "/dashboard/logs",
+      icon: FileText,
+      isAdminOnly: true,
+    }
   ],
   navSecondary: [
     {
@@ -83,7 +90,7 @@ export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sideb
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} userRole={user.role} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

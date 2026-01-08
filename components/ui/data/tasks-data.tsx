@@ -1,11 +1,11 @@
-import { Card } from "./card";
+import { Card } from "../card";
 import { Suspense } from "react";
-import { Skeleton } from "./skeleton";
+import { Skeleton } from "../skeleton";
 import { getTasks } from "@/lib/actions/task";
 import { getStatusLabel } from "@/lib/utils";
 import { PencilIcon, TrashIcon } from "lucide-react";
-import { EditTaskDialog } from "./dialogs/edit-task-dialog";
-import { DeleteTaskDialog } from "./dialogs/delete-task-dialog";
+import { EditTaskDialog } from "../dialogs/edit-task-dialog";
+import { DeleteTaskDialog } from "../dialogs/delete-task-dialog";
 import { getUser } from "@/lib/dal/dal";
 import { canDeleteTask, canUpdateTask } from "@/lib/permissions";
 import { Role } from "@/generated/prisma/client";

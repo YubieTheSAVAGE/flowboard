@@ -1,11 +1,11 @@
 import { getProjects } from "@/lib/actions/project";
-import { Card } from "./card";
+import { Card } from "../card";
 import { Suspense } from "react";
-import { Skeleton } from "./skeleton";
+import { Skeleton } from "../skeleton";
 import { PencilIcon, TrashIcon } from "lucide-react";
-import { EditProjectDialog } from "./dialogs/edit-project-dialog";
+import { EditProjectDialog } from "../dialogs/edit-project-dialog";
 import { Project, Role } from "@/generated/prisma/client";
-import { DeleteProjectDialog } from "./dialogs/delete-project-dialog";
+import { DeleteProjectDialog } from "../dialogs/delete-project-dialog";
 import { getUser } from "@/lib/dal/dal";
 import { canDeleteProject, canUpdateProject } from "@/lib/permissions";
 

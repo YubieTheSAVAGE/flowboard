@@ -21,6 +21,18 @@ export const createAuditLog = async (userId: string, action: AuditAction, messag
 }
 
 export const getAuditLogs = async () => {
-    const auditLogs = await prisma.auditLog.findMany();
+    const auditLogs = await prisma.auditLog.findMany({
+        include: {
+            user: {
+                select: {
+                    name: true,
+                    email: true,
+                }
+            }
+        },
+        orderBy: {
+            createdAt: 'desc'
+        }
+    });
     return auditLogs;
 }

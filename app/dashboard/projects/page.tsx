@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { CreateProjectDialog } from "@/components/ui/dialogs/create-project-dialog";
-import ProjectsData from "@/components/ui/projects-data";
+import ProjectsData from "@/components/ui/data/projects-data";
 import { getUser } from "@/lib/dal/dal";
 import { canCreateProject } from "@/lib/permissions";
 import { Role } from "@/generated/prisma/client";

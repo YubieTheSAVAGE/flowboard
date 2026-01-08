@@ -1,6 +1,6 @@
 import { CreateTaskDialog } from "@/components/ui/dialogs/create-task-dialog"
 import { Metadata } from "next";
-import TasksData from "@/components/ui/tasks-data";
+import TasksData from "@/components/ui/data/tasks-data";
 import { canCreateTask } from "@/lib/permissions";
 
 export const metadata: Metadata = {
