@@ -8,11 +8,12 @@ import
     getTasksCache as getTasksCacheDal 
 } from "@/lib/dal/task";
 import { verifySession } from "../dal/dal";
-import { TaskStatus } from "@/generated/prisma/client";
+import { AuditAction, TaskStatus } from "@/generated/prisma/client";
 import { CreateTaskFormState, UpdateTaskFormState, updateTaskSchema } from "../definitions";
 import { taskSchema } from "../definitions";
 import { revalidatePath } from "next/cache";
 import { toast } from "sonner";
+import { createAuditLog } from "../dal/audit";
 
 export async function createTask(
     prevState: CreateTaskFormState | undefined,
@@ -40,6 +41,7 @@ export async function createTask(
         };
     }
     revalidatePath("/dashboard/tasks");
+    await createAuditLog(session.userId as string, AuditAction.CREATE_TASK, `Task ${name} created for project ${projectId} by ${session.userId}`);       
     return {
         success: true,
         message: "Task created successfully",
@@ -97,6 +99,7 @@ export async function updateTask(
         };
     }
     revalidatePath("/dashboard/tasks");
+    await createAuditLog(session.userId as string, AuditAction.UPDATE_TASK, `Task ${name} updated for project ${task.projectId} by ${session.userId}`);    
     return {
         success: true,
         message: "Task updated successfully",
@@ -117,6 +120,7 @@ export async function deleteTask(id: string) {
         };
     }
     revalidatePath("/dashboard/tasks");
+    await createAuditLog(session.userId as string, AuditAction.DELETE_TASK, `Task ${id} deleted by ${session.userId}`);    
     return {
         success: true,
         message: "Task deleted successfully",

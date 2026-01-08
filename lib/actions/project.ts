@@ -1,6 +1,7 @@
 "use server"
-import 
-{ 
+import { createAuditLog } from "../dal/audit";
+import { AuditAction } from "@/generated/prisma/client";
+import { 
     createProject as createProjectDal, 
     getProjects as getProjectsDal, 
     getProjectsCache as getProjectsCacheDal, 
@@ -37,6 +38,7 @@ export async function createProject(
             message: "Failed to create project",
         };
     } 
+    await createAuditLog(session.userId as string, AuditAction.CREATE_PROJECT, `Project ${name} created by ${session.userId}`);    
     revalidatePath("/dashboard/projects");
     return {
         success: true,
@@ -100,6 +102,7 @@ export async function updateProject(id: string, prevState: UpdateProjectFormStat
         };
     }
     revalidatePath("/dashboard/projects");
+    await createAuditLog(session.userId as string, AuditAction.UPDATE_PROJECT, `Project ${name} updated by ${session.userId}`);    
     return {
         success: true,
         message: "Project updated successfully",
@@ -120,6 +123,7 @@ export async function deleteProject(id: string) {
         };
     }
     revalidatePath("/dashboard/projects");
+    await createAuditLog(session.userId as string, AuditAction.DELETE_PROJECT, `Project ${id} deleted by ${session.userId}`);    
     return {
         success: true,
         message: "Project deleted successfully",
